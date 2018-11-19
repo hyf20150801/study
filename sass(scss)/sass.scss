@@ -1,0 +1,75 @@
+//1、比css新增了变量,变量用$命名开始,变量还可以引用变量,变量名用中划线或者下划线分隔都行
+//2、简单易用的嵌套,既可以写自己属性，又可以嵌套子元素
+//3、父选择器直接用&替换
+//4、并集选择器在sass中也有效,兄弟选择器等也可以使用
+//5、属性也可以嵌套,例如p的border
+//6、sass使用@import会生成sass就导进来,可以省略后缀名sass或scss,
+//   但vscode的easysass插件不认_,sass可以import另外的sass
+//7、!default 变量的默认值,如果没有设置就用默认值
+//8、如果导入的是css文件，把它改成scss，不认会造成css文件下载
+//9、静默注释，可以在sass生成css的时候抹去注释，//和/**/
+//10、混合器@mixin定义，用@include来引入,混合器可以嵌套也可以使用&代替父选择器
+//11、混合器还可以传参,使用$变量:值的参数,没有顺序之分，参数还可以当别的参数的值
+//12、@extend可以用来继承,不仅仅是继承选择器，还继承了选择器相关的组合选择器,就好像添加了一个类选择器一样
+//13、继承仅仅是重复选择器，不会重复属性,如果样式重叠权限高的胜出，不要在css规则中使用后代选择器去继承css规则
+
+
+$color2:#9a2;
+$color2:#a26 !default;
+$hight-color:#f90;
+$hight-border:1px solid $hight-color;
+
+@mixin rounded-corners {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  li{
+    text-align: center;
+  }
+}
+
+@mixin link-colors($normal, $hover, $visited) {
+  color: $normal;
+  &:hover { color: $hover; }
+  &:visited { color: $visited; }
+}
+
+.error {
+  background-color: #fdd;
+}
+
+div{
+  @import "sass2";
+  $width:100px;
+  width:$width;
+  color:$color2;
+  border: $hight-border;
+  + div{
+    font-size: 30px;
+  }
+  h2,h3{
+    color: $hight-color;
+    @include link-colors(
+      $normal: blue,
+      $visited:green,
+      $hover: red
+    )
+  }
+  p{
+    color: $color2;
+    &:hover{
+      color:#2d5;
+    }
+    @extend .error;
+    border: {
+      style:solid;
+      width: 1px;
+      color: #222;
+    }
+    @include rounded-corners;
+  }
+}
+
+
+
+
