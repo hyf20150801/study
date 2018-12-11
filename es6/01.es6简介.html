@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+    //Babel转码器是一个广泛使用的 ES6 转码器，可以将 ES6 代码转为 ES5 代码，从而在现有环境执行
+    //转码前
+    input.map(item => item + 1);
+    //转码后
+    input.map(function (item) {
+      return item + 1;
+    })
+
+    //.babelrc是babel的配置文件
+
+    // Babel 提供babel-cli工具，用于命令行转码
+    // npm install --global babel-cli
+
+    // 转码结果输出到标准输出
+    // babel example.js
+    // 转码结果写入一个文件#--out - file 或 - o 参数指定输出文件
+    // babel example.js--out - file compiled.js# 或者
+    // babel example.js - o compiled.js
+    // 整个目录转码#--out - dir 或 - d 参数指定输出目录
+    // babel src--out - dir lib# 或者
+    // babel src - d lib
+    // - s 参数生成source map文件
+    // babel src - d lib - s
+
+    //每个项目的不同版本Babel，不能通用,只能把babel-cli安装在项目中
+    // npm install --save-dev babel-cli
+    // 改写package.json
+    // {
+    //   "devDependencies": {
+    //     "babel-cli": "^6.0.0"
+    //   },
+    //   "scripts": {
+    //     "build": "babel src -d lib"
+    //   },
+    // }
+    // 转码运行:npm run build
+
+    //babel-register模块改写require命令的文件进行转码,如加载.js、.jsx、.es、.es6的文件
+    // 安装:npm install --save-dev babel-register
+    //先加载babel-register就不用再对index.js转码了,只会对require加载文件转码，不会对本文件解码
+    require("babel-register")
+    require("./index.js")
+
+    //babel-core
+    // 某些代码需要调用 Babel 的 API 进行转码，就要使用babel-core模块
+    //安装:npm install babel-core --save
+
+    var babel = require("babel-core");
+    //字符串转码
+    babel.transform("code()", options);
+    //=>{code,map,ast}
+    //文件转码(异步)
+    babel.transformFile("filename.js", options, function (err, result) {
+      restult; // =>{code,map,ast}
+    });
+
+    //文件转码(同步)
+    babel.transformFileSync("filename.js", options);
+    //=>{code,map,ast}
+
+    //Babel AST转码
+    babel.transformFromAst(ast, code, options);
+    //=> {code,map,ast}
+
+    //例子:es6转成es5代码
+    var es6Code = 'let x = n => n + 1';
+    var es5Code = require("babel-core").transform(es6Code, {
+      presets: ['latest']
+    }).code;
+    // '"use strict";\n\nvar x = function x(n) {\n  return n + 1;\n};'
+
+    //babel-polyfill
+    //babel默认只转换新的javascript句法,不转换新的API,Iterator,Generator,Set,Map,Proxy,Reflect等全局对象都不会转码
+    //那么就要使用babel-polyfill进行转换,就是为当前环境提供一个垫片
+    // 安装:npm install --save -babel-polyfill
+    import 'babel-polyfill';
+    // 或者
+    require('babel-polyfill');
+
+    //浏览器环境转换
+    //es6转es5
+    // <\script src = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.4.4/babel.min.js" >
+    // <\/script>
+    // <\script type="text/babel">
+    //   // Your ES6 code
+    // <\/script>
+
+    //打包成浏览器运行的脚步
+    //npm install --save-dev babelify babel-preset-latest
+    //browserify script.js -o bundle.js \-t [babelify --presets[latest]]
+    // 上面的命令行将es6脚步script.js转为bundle.js,浏览器直接加载后者
+    //配置package.json文件就不用每次在命令行输入参数
+    // {
+    //  "browserify": {
+    //     "transform": [["babelify", { "presets": ["latest"] }]]
+    //   }
+    // }
+
+    //在线转换es6转成es5,在线网站：https://babel.docschina.org/repl
+    
+    //Google 公司的Traceur转码器可以将es6转es5
+    // <\script src="https://google.github.io/traceur-compiler/bin/traceur.js"><\/script>
+    // <\script src="https://google.github.io/traceur-compiler/bin/BrowserSystem.js"><\/script>
+    // <\script src="https://google.github.io/traceur-compiler/src/bootstrap.js"><\/script>
+    // <\script type="module">import './Greeter.js';<\/script>
+    //第一个是Traceur库,第二和第三是这个库的浏览器环境,第四个是要转换的文件，type的类型为module是es6的识别标志
+
+    // node模块traceur的命令行转换
+    // npm install -g traceur
+    // traceur --script calc.es6.js --out calc.es5.js --experimental    //es6转换成es5并保存文件
+    //--script选项表示指定输入文件，--out选项表示指定输出文件,防止有些特性编译不成功，最好加上--experimental选项
+
+    //node环境的traceur的用法
+    var traceur =   require("traceur");
+    var fs = require("fs");
+    //将es6脚本转为字符串
+    var contents = fs.readFileSync("es6-file.js").toString();
+    var result = traceur.compile(contents,{
+      fileName:"es6-file.js",
+      sourceMap:true,
+      module:"commonjs"
+    })
+    if(result.error){
+      throw   result.error;
+    }
+    //result对象的js属性就是转换后的es5代码
+    fs.writeFileSync('out.js','result.js');
+    //sourceMap属性对应map文件
+    fs.writeFileSync('out.js.map','result.sourceMap')
+    
+
+  </script>
+</body>
+
+</html>
