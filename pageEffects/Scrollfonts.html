@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上下滚动字体</title>
+</head>
+<body>
+    <div class="tableBody">
+            <ul>
+               <li>1</li>
+               <li>2</li>
+               <li>3</li>
+               <li>4</li>
+            </ul>
+    </div>
+    <script src="./js/lib/jquery-1.9.1.min.js"></script>
+    <script>
+    //滚动列表
+    var AutoScroller=setInterval(AutoScroll, 1000);//滚动时间
+    function AutoScroll() {
+        $('.tableBody').find('ul:first').animate({
+            marginTop: "-60px"
+        },1000,//滚动速度
+        function() {
+            $(this).css({
+                marginTop: "0px"
+            }).find("li:first").appendTo(this);
+        });
+    };
+    $(".tableBody").on("mouseenter mouseleave", 'li',function(event){
+        if(event.type == "mouseenter"){ 
+            $('.tableBody').find('ul:first').stop(true);
+            clearInterval(AutoScroller);
+        }else if(event.type == "mouseleave"){
+            AutoScroller=setInterval(AutoScroll, 1000);
+        }
+    })    
+    </script>
+</body>
+</html>

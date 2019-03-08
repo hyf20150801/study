@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>字符串模板替换和动态弹出详情框</title>
+</head>
+<body>
+  <script>
+    function tdfd2(res) {
+      //字符串模板替换
+      var tb1 = '';
+      var t = "<li class='@redli' data-info='@tdno' ><i class='tli0'></i><span class='li1' title='@tdLine'>@tdLine</span><span class='tli2'>@tdCause</span><span class='tli3'>@StartTime</span><span class='tli4'>@EndTime</span><span class='tli5'>@CusNum</span><span class='tli6'>@ImpCusNum</span></li>";
+      for (var i = 0; i < res.length; i++) {
+        tb1 += t.replace(/@tdLine/g, htmlEncode(res[i].power_STATION))
+                .replace(/@tdCause/g, htmlEncode(res[i].order_CODE))
+                .replace(/@StartTime/g, htmlEncode(res[i].appeal_TYPE))
+                .replace(/@EndTime/g, htmlEncode(res[i].process_TIME).substr(0, 10))
+                .replace(/@CusNum/g, htmlEncode(res[i].business_TYPE))
+                .replace(/@ImpCusNum/g, htmlEncode(res[i].order_STATUSN))
+                .replace(/@tdno/g, htmlEncode(res[i].call_CONTENT))
+                .replace(/@redli/g, htmlEncode(yaptdArr[i].overtime?'redli':''));
+      }
+      $('#tableBody1 .planTable9').empty();
+      $('#tableBody1 .planTable9').append(tb1);
+      //动态弹出详情信息框
+      $('.tabfailure .planTable9 li').hover(
+          function () {
+              $('#tableinfo').fadeIn('slow');
+          }
+      );
+      $(".tabfailure .planTable9 li").mousemove(function (e) {
+          var top = e.pageY + 50;
+          var left = e.pageX + 50;
+          $("#tableinfo").css("z-index", 999);
+          $("#tableinfo").css("top", top + 'px');
+          $("#tableinfo").css("left", left + 'px');
+          $("#tablecontent").html(e.currentTarget.getAttribute("data-info"));
+      });
+      $(".tabfailure .planTable9 li").mouseleave(function () {
+          $("#tableinfo").hide();
+      });
+      $(".tabfailure .planTable9").mouseleave(function () {
+          $("#tableinfo").hide();
+      });
+      $(".tabfailure").mouseleave(function () {
+          $("#tableinfo").hide();
+      }); 
+	  }  
+  </script>
+</body>
+</html>

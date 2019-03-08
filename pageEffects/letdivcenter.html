@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .selecttip{
+      display:none;
+    position: absolute;
+    width: 1000px;
+    height: 500px;
+    background-color: #0b3453;
+    box-shadow: rgb(11, 234, 235) 1px 1px 40px 8px;
+    color:#fff;
+    text-align: center;
+    border-radius: 20px;
+    }
+    .selecttip h3{
+      background: #fff;
+    opacity: 0.7;
+    color: #0b3453;
+    font-size: 45px;
+    }
+    .closetip{
+      cursor: pointer;
+      width: 120px;
+      height: 90px;
+      text-align: center;
+      color: #fff;
+      background-color: #0b3453;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div style="width: 5000px;border: 1px solid #ccc;">
+    <p class="hitme" style="padding-left: 200px;">点击我</p>
+  </div>
+  <div class="selecttip">
+    <h3>我是标题</h3>
+    <div class="tipinfo">请选择日期</div>
+    <input class="closetip" type="button" value="确认"></input>
+  </div>
+  <script src="./js/lib/jquery-1.9.1.min.js"></script>
+  <script>
+    function letDivCenter(obj) {       
+        var screenWidth = $(window).width(), screenHeight = $(window).height();  //当前浏览器窗口的 宽高
+        var scrolltop = $(document).scrollTop();//获取当前窗口距离页面顶部高度   
+        var objLeft = (screenWidth - obj.width())/2 ;
+        var objTop = (screenHeight - obj.height())/2 + scrolltop;
+
+        obj.css({left: objLeft + 'px', top: objTop + 'px'}).show();
+       
+        //浏览器窗口大小改变时
+        $(window).resize(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+           
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+           
+            obj.css({left: objLeft + 'px', top: objTop + 'px'}).show();
+           
+        });
+        
+        //浏览器有滚动条时的操作
+        $(window).scroll(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+           
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+           
+            obj.css({left: objLeft + 'px', top: objTop + 'px'}).show();
+        });
+       
+    }
+
+    $('.hitme').on("click",function () {
+      
+      letDivCenter($('.selecttip'));
+     
+      })
+      $('.closetip').on("click",function () {
+      
+      $('.selecttip').hide(500);
+      })
+      
+    </script>
+</body>
+</html>
