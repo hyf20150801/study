@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+    <head>
+        <title>jsonp</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+      <h1>jsonp模拟</h1>
+       <!--  <script>
+            function test(data){
+                alert(data.name);
+            };
+        </script> -->
+        <!-- <script src="http://127.0.0.1:8080/jsonp?callback=test"></script> -->
+        <script>
+          //JSONP的原理是请求服务器返回的是回调函数名称包裹一层字符串的调用代码,字符串内容可以是任意格式，比如JSON内容，字符串等等。
+
+          //说明:<script>、<img>、<link>标签都可以用来跨域,常用的是script标签的src属性
+          //服务端按照客户端需求来动态生成js脚本响应,解决了服务端提供各自的本地函数不相同的问题
+          //客户端不再把远程js文件写死，而是编码实现动态查询(客户端jsonp的核心)
+          //服务端检测jsonp和callback,返回JSON字符串或者字符串数据
+          //动态创建script标签,并请求,
+          function addScriptTag(src){
+              var script = document.createElement('script');
+              script.setAttribute('type', 'text/javascript');
+              script.src = src;
+              document.body.appendChild(script);
+          };
+          //如：在onload后，跨域请求
+          window.onload = function(){
+              addScriptTag('http://127.0.0.1:8080/jsonp?callback=monkey');
+          };
+          //回调的方法,且必须为全局方法，不然会报错
+          function monkey(data){
+              alert(data.name);
+          };
+
+          //ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而jsonp的核心则是动态添加<script>标签来调用服务器提供的js脚本。
+          /*
+          $.ajax({
+             type: "get",
+             async: false,
+             url: "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998",
+             dataType: "jsonp",
+             jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+             jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
+             success: function(json){
+                 alert('您查询到航班信息：票价： ' + json.price + ' 元，余票： ' + json.tickets + ' 张。');
+             },
+             error: function(){
+                 alert('fail');
+             }
+         });
+         */
+        </script>
+    </body>
+</html>

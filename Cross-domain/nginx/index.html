@@ -1,0 +1,27 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>nginx反向代理实现跨域-前端</title>
+  </head>
+  <body>
+    <h1>nginx反向代理实现跨域</h1>
+  </body>
+  <script>
+    var xhr = new XMLHttpRequest();
+    // 接口地址修改为当前域名下 /api 路劲下的 getFriend
+    xhr.open("GET", "/api/getFriend");
+    // 请求发起前在头部附加token
+    xhr.setRequestHeader("token", "quanquanbunengshuo");
+    //请求发送允许携带cookie
+    xhr.withCredentials = true;
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.responseText);
+        console.log(xhr.getAllResponseHeaders());
+      }
+    };
+    xhr.send();
+  </script>
+</html>
